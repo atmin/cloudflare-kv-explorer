@@ -1,10 +1,14 @@
 import * as React from "react";
-import { SettingsProps } from "./types";
+import { LocalStorageAccessor } from "./types";
 
-export const RouteSettings = ({ useLocalStorage }: SettingsProps) => {
+export const RouteSettings = ({
+  useLocalStorage
+}: {
+  useLocalStorage: LocalStorageAccessor;
+}) => {
   const [accountId, setAccountId] = useLocalStorage("accountId");
   const [authEmail, setAuthEmail] = useLocalStorage("authEmail");
-  const [authKey, setAuthKey] = useLocalStorage("authEmail");
+  const [authKey, setAuthKey] = useLocalStorage("authKey");
   return (
     <div>
       <h2>Settings</h2>

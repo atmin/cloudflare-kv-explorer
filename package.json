@@ -9,6 +9,7 @@
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "memoizee": "^0.4.14",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",

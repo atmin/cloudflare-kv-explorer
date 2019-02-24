@@ -3,9 +3,13 @@ import { HashRouter as Router, Route } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { RouteHome } from "./RouteHome";
 import { RouteSettings } from "./RouteSettings";
-import { SettingsProps } from "./types";
+import { LocalStorageAccessor } from "./types";
 
-export const App = ({ useLocalStorage }: SettingsProps) => (
+export const App = ({
+  useLocalStorage
+}: {
+  useLocalStorage: LocalStorageAccessor;
+}) => (
   <Router>
     <div className="sans-serif w-100 vh-100 pa4">
       <nav className="mb3">
@@ -35,7 +39,11 @@ export const App = ({ useLocalStorage }: SettingsProps) => (
         />
       </nav>
 
-      <Route exact path="/" component={RouteHome} />
+      <Route
+        exact
+        path="/"
+        render={() => <RouteHome {...{ useLocalStorage }} />}
+      />
       <Route
         path="/settings"
         render={() => <RouteSettings {...{ useLocalStorage }} />}
