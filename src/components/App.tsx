@@ -1,20 +1,45 @@
 import * as React from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import { Home } from "./Home";
-import { Table } from "./Table";
-import { SettingsButton } from "./SettingsButton";
+import { NavLink } from "./NavLink";
+import { RouteHome } from "./RouteHome";
+import { RouteSettings } from "./RouteSettings";
+import { SettingsProps } from "./types";
 
-export const App = ({ accountId }: { accountId: string }) => (
+export const App = ({ useLocalStorage }: SettingsProps) => (
   <Router>
     <div className="sans-serif w-100 vh-100 pa4">
-      <nav>
-        <SettingsButton />
-        <a href="#">home</a>
-        <a href="#table">table</a>
+      <nav className="mb3">
+        <NavLink
+          to="/"
+          label="Home"
+          icon={() => (
+            <svg fill="currentColor" viewBox="0 0 283 262" className="w1 h1">
+              <g>
+                <path d="M255 143l0 119 -93 0 0 -103 -41 0 0 103 -93 0 0 -119 -13 13 -15 -15 142 -141 141 141 -15 15 -13 -13zm-72 99l52 0 0 -120 -93 -93 -93 93 0 120 51 0 0 -104 83 0 0 104z" />
+              </g>
+              >
+            </svg>
+          )}
+        />
+        <NavLink
+          to="/settings"
+          label="Settings"
+          icon={() => (
+            <svg fill="currentColor" viewBox="0 0 100 100" className="w1 h1">
+              <g>
+                <path d="M21.8,85.4l3.7-1.7c2.3,2,5,3.6,8,4.6l0.4,4c0.1,1.5,1.4,2.7,2.9,2.7h8c1.5,0,2.8-1.2,2.9-2.7l0.4-4c3-1,5.7-2.6,8-4.6 l3.7,1.7c1.4,0.6,3,0.1,3.8-1.2l4-7c0.8-1.3,0.4-3-0.9-3.9l-3.3-2.3c0.3-1.5,0.5-3,0.5-4.6c0-1.6-0.2-3.1-0.5-4.6l3.3-2.3 c1.2-0.9,1.6-2.6,0.9-3.9l-4-7c-0.8-1.3-2.4-1.8-3.8-1.2L56,49.2c-2.3-2-5-3.6-8-4.6l-0.4-4c-0.1-1.5-1.4-2.7-2.9-2.7h-8 c-1.5,0-2.8,1.2-2.9,2.7l-0.4,4c-3,1-5.7,2.6-8,4.6l-3.7-1.7c-1.4-0.6-3-0.1-3.8,1.2l-4,7c-0.8,1.3-0.4,3,0.9,3.9l3.3,2.3 c-0.3,1.5-0.5,3-0.5,4.6c0,1.6,0.2,3.1,0.5,4.6l-3.3,2.3c-1.2,0.9-1.6,2.6-0.9,3.9l4,7C18.8,85.5,20.4,86,21.8,85.4z M40.7,53.8 c7,0,12.7,5.7,12.7,12.7c0,7-5.7,12.7-12.7,12.7c-7,0-12.7-5.7-12.7-12.7C28,59.5,33.7,53.8,40.7,53.8z" />
+                <path d="M81.8,20.3l-2.7-0.2c-0.3-1-0.8-1.9-1.3-2.8c-0.6-0.9-1.2-1.8-1.9-2.5l1.1-2.5c0.4-0.9,0-2.1-0.9-2.6l-4.8-2.6 c-0.9-0.5-2-0.2-2.6,0.6L67.2,10c-2-0.4-4.2-0.3-6.2,0.1l-1.6-2.2c-0.6-0.8-1.8-1.1-2.6-0.5L52,10.2c-0.9,0.5-1.2,1.7-0.8,2.6 l1.2,2.5c-1.4,1.6-2.4,3.5-3,5.5L46.7,21c-1,0.1-1.8,1-1.8,2l0.1,5.5c0,1,0.8,1.9,1.9,2l2.7,0.2c0.3,1,0.8,1.9,1.3,2.8 s1.2,1.8,1.9,2.5l-1.1,2.5c-0.4,0.9,0,2.1,0.9,2.6l4.8,2.6c0.9,0.5,2,0.2,2.6-0.6l1.5-2.3c2,0.4,4.2,0.3,6.2-0.1l1.6,2.2 c0.6,0.8,1.8,1.1,2.6,0.5l4.7-2.8c0.9-0.5,1.2-1.7,0.8-2.6l-1.2-2.5c1.4-1.6,2.4-3.5,3-5.5l2.7-0.3c1-0.1,1.8-1,1.8-2l-0.1-5.5 C83.6,21.2,82.8,20.4,81.8,20.3z M68.8,32.8c-4.1,2.5-9.4,1.2-11.8-2.9s-1.2-9.4,2.9-11.8c4.1-2.5,9.4-1.2,11.8,2.9 S72.9,30.3,68.8,32.8z" />
+              </g>
+            </svg>
+          )}
+        />
       </nav>
 
-      <Route exact path="/" component={Home} />
-      <Route path="/table" component={Table} />
+      <Route exact path="/" component={RouteHome} />
+      <Route
+        path="/settings"
+        render={() => <RouteSettings {...{ useLocalStorage }} />}
+      />
     </div>
   </Router>
 );
