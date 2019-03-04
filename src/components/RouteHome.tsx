@@ -21,22 +21,44 @@ const loadNamespaces = async (
 };
 
 const loadKeys = async (
-  selectedNamespace: { id: string; title: string },
+  namespace: string,
   setKeys: Function,
   accountId: string,
   authEmail: string,
   authKey: string
 ) => {
   const response = await axios({
-    url: `https://api.cloudflare.com/client/v4/accounts/${accountId}/storage/kv/namespaces/${
-      selectedNamespace.id
-    }/keys`,
+    url: `https://api.cloudflare.com/client/v4/accounts/${accountId}/storage/kv/namespaces/${namespace}/keys`,
     headers: {
       "X-Auth-Email": authEmail,
       "X-Auth-Key": authKey
     }
   });
   setKeys(response.data.result);
+};
+
+const getValue = async (
+  namespace: string,
+  key: string,
+  keys: [],
+  setKeys: Function,
+  accountId: string,
+  authEmail: string,
+  authKey: string
+) => {
+  const value = (await axios({
+    url: `https://api.cloudflare.com/client/v4/accounts/${accountId}/storage/kv/namespaces/${namespace}/values/${key}`,
+    headers: {
+      "X-Auth-Email": authEmail,
+      "X-Auth-Key": authKey
+    }
+  })).data;
+  const idx = keys.findIndex(row => (row as any).name === key);
+  setKeys([
+    ...keys.slice(0, idx),
+    { ...(keys[idx] as any), value },
+    ...keys.slice(idx + 1)
+  ]);
 };
 
 export const RouteHome = ({
@@ -60,7 +82,7 @@ export const RouteHome = ({
   useEffect(() => {
     if (!keys && selectedNamespace) {
       loadKeys(
-        selectedNamespace as any,
+        (selectedNamespace as any).id,
         setKeys,
         accountId,
         authEmail,
@@ -71,8 +93,21 @@ export const RouteHome = ({
 
   const [selectedKey, setSelectedKey] = useState(null);
   useEffect(() => {
-    if (selectedKey) {
-      console.log(selectedKey);
+    if (
+      selectedKey &&
+      !(((keys || []).find(
+        row => (row as any).name === (selectedKey as any).name
+      ) || {}) as any).value
+    ) {
+      getValue(
+        (selectedNamespace as any).id,
+        (selectedKey as any).name,
+        keys as any,
+        setKeys,
+        accountId,
+        authEmail,
+        authKey
+      );
     }
   });
 
@@ -101,9 +136,12 @@ export const RouteHome = ({
               {!keys && <div>loading...</div>}
               {keys && (
                 <Table
-                  header={["Key"]}
+                  header={["Key", "Value"]}
                   data={keys}
-                  render={(row: any) => [row.name]}
+                  render={(row: any) => [
+                    row.name,
+                    row.value ? JSON.stringify(row.value) : "…"
+                  ]}
                   onRowSelect={(row: any) => setSelectedKey(row)}
                 />
               )}
@@ -111,7 +149,10 @@ export const RouteHome = ({
           )}
         </article>
       ) : (
-        <h2>Home</h2>
+        <>
+          <h2>Home</h2>
+          <p>Enter your Cloudflare credentials to continue</p>
+        </>
       )}
     </div>
   );
